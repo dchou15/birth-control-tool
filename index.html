@@ -5,19 +5,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Birth Control Finder</title>
   <style>
+    :root {
+      --main-bg: #fff0f6;
+      --card-bg: #fff;
+      --primary: #e75480;
+      --secondary: #f8bbd0;
+      --accent: #b39ddb;
+      --info-bg: #ffe0ef;
+      --info-text: #b71c5a;
+      --button-bg: #e75480;
+      --button-hover: #b71c5a;
+      --modal-bg: #fff;
+      --modal-overlay: rgba(0,0,0,0.25);
+    }
     html, body {
       height: 100%;
       margin: 0;
       padding: 0;
       font-family: 'Segoe UI', Arial, sans-serif;
-      background: linear-gradient(120deg, #e0eafc 0%, #cfdef3 100%);
+      background: var(--main-bg);
       min-height: 100vh;
       width: 100vw;
       box-sizing: border-box;
     }
     .main-header {
       width: 100vw;
-      background: #007be5;
+      background: var(--primary);
       color: #fff;
       padding: 2rem 0 1.2rem 0;
       text-align: center;
@@ -28,20 +41,25 @@
       margin-bottom: 2rem;
     }
     .content {
-      max-width: 600px;
+      max-width: 700px;
       margin: 0 auto;
       padding: 2rem 1rem 3rem 1rem;
-      background: rgba(255,255,255,0.95);
+      background: var(--card-bg);
       border-radius: 18px;
       box-shadow: 0 4px 24px rgba(0,0,0,0.08);
       min-height: 350px;
       display: flex;
       flex-direction: column;
       align-items: center;
+      animation: fadeIn 0.5s;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .question {
       font-size: 1.4rem;
-      color: #1a237e;
+      color: #b71c5a;
       margin-bottom: 2.2rem;
       font-weight: 500;
       text-align: center;
@@ -52,23 +70,28 @@
       gap: 1.2rem;
       width: 100%;
       align-items: center;
+      margin-bottom: 1.5rem;
     }
-    button {
-      background: linear-gradient(90deg, #007be5 60%, #00c6fb 100%);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 1rem 2rem;
+    .option-card {
+      background: var(--secondary);
+      color: #b71c5a;
+      border-radius: 12px;
+      padding: 1.2rem 2rem;
       font-size: 1.1rem;
       font-weight: 500;
       cursor: pointer;
       box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-      transition: background 0.2s, transform 0.1s;
+      border: 2px solid transparent;
+      transition: background 0.2s, transform 0.1s, border 0.2s;
       width: 90%;
-      max-width: 350px;
+      max-width: 400px;
+      text-align: center;
+      outline: none;
     }
-    button:hover {
-      background: linear-gradient(90deg, #005fa3 60%, #00a6d6 100%);
+    .option-card:hover, .option-card:focus {
+      background: var(--accent);
+      color: #fff;
+      border: 2px solid var(--primary);
       transform: translateY(-2px) scale(1.03);
     }
     .result {
@@ -83,15 +106,103 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     }
     .info-bubble {
-      background: #e6f7ff;
-      color: #007be5;
+      background: var(--info-bg);
+      color: var(--info-text);
       border-radius: 10px;
       padding: 1rem 1.2rem;
       margin-bottom: 1.5rem;
       font-size: 1.05rem;
       text-align: left;
       box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-      max-width: 500px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .encouragement {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.1rem;
+      text-align: center;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .note-bubble {
+      background: #ffe0ef;
+      color: #b71c5a;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      margin-bottom: 1.5rem;
+      font-size: 1.05rem;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--modal-overlay);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.2s;
+    }
+    .modal {
+      background: var(--modal-bg);
+      border-radius: 16px;
+      padding: 2rem 1.5rem 1.5rem 1.5rem;
+      max-width: 400px;
+      width: 90vw;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+      text-align: left;
+      position: relative;
+      animation: fadeIn 0.2s;
+    }
+    .modal h2 {
+      margin-top: 0;
+      color: var(--primary);
+      font-size: 1.3rem;
+      margin-bottom: 0.7rem;
+    }
+    .modal p {
+      color: #333;
+      font-size: 1.05rem;
+      margin-bottom: 0.7rem;
+    }
+    .close-modal {
+      position: absolute;
+      top: 0.7rem;
+      right: 1.2rem;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #b71c5a;
+      cursor: pointer;
+    }
+    .restart-btn {
+      background: var(--button-bg);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 1rem 2rem;
+      font-size: 1.1rem;
+      font-weight: 500;
+      cursor: pointer;
+      margin-top: 2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: background 0.2s, transform 0.1s;
+    }
+    .restart-btn:hover {
+      background: var(--button-hover);
+      transform: translateY(-2px) scale(1.03);
     }
     @media (max-width: 700px) {
       .main-header {
@@ -105,7 +216,7 @@
       .question {
         font-size: 1.1rem;
       }
-      button {
+      .option-card {
         font-size: 1rem;
         padding: 0.8rem 1rem;
       }
@@ -113,9 +224,12 @@
         font-size: 1.1rem;
         padding: 1rem 0.5rem;
       }
-      .info-bubble {
+      .info-bubble, .note-bubble, .encouragement {
         font-size: 0.95rem;
         padding: 0.7rem 0.7rem;
+      }
+      .modal {
+        padding: 1.2rem 0.7rem 1rem 0.7rem;
       }
     }
   </style>
@@ -123,25 +237,62 @@
 <body>
   <div class="main-header">Birth Control Finder</div>
   <div class="content">
-    <div id="app">
-      <!-- Dynamic content here -->
-    </div>
+    <div id="app"></div>
   </div>
+  <div id="modal-root"></div>
   <script>
-    // Decision tree data structure
+    // Info for each method
+    const methodInfo = {
+      'The Pill (Everyday)': {
+        title: 'The Pill (Everyday)',
+        desc: 'A daily pill containing hormones to prevent pregnancy. Highly effective when taken at the same time every day. May help with cramps and acne. Does not protect against STIs.'
+      },
+      'Depo-Vera Shot (Every 3 months)': {
+        title: 'Depo-Vera Shot',
+        desc: 'An injection you get every 3 months. Contains hormones to prevent pregnancy. Can lighten or stop periods for some. Does not protect against STIs.'
+      },
+      'Birth Control Rings (Put in and take out once a month)': {
+        title: 'Birth Control Rings',
+        desc: 'A small ring you place in your vagina for 3 weeks, then remove for 1 week. Releases hormones to prevent pregnancy. Does not protect against STIs.'
+      },
+      'Birth Control Patches (Weekly)': {
+        title: 'Birth Control Patches',
+        desc: 'A patch you stick on your skin and change weekly. Releases hormones to prevent pregnancy. Does not protect against STIs.'
+      },
+      'Hormonal IUDs! (Can last up to 8 years)': {
+        title: 'Hormonal IUDs',
+        desc: 'A small device placed in your uterus by a doctor. Releases hormones and can last up to 8 years. Very effective. Can make periods lighter or stop them. Does not protect against STIs.'
+      },
+      'Birth Control Implant! (Lasts up to 5 years)': {
+        title: 'Birth Control Implant',
+        desc: 'A tiny rod placed under the skin of your arm by a doctor. Releases hormones and lasts up to 5 years. Very effective. Can make periods lighter or stop them. Does not protect against STIs.'
+      },
+      'Paragard Copper IUD': {
+        title: 'Paragard Copper IUD',
+        desc: 'A hormone-free IUD placed in your uterus by a doctor. Can last up to 12 years. May make periods heavier at first. Does not protect against STIs.'
+      },
+      'Use Condoms!! Regular or Internal Condoms.': {
+        title: 'Condoms',
+        desc: 'Condoms are the only method that protect against both pregnancy and STIs. Use them every time you have sex for best protection.'
+      }
+    };
+
+    // Decision tree structure
     const tree = {
-      question: "Do you want your birth control to protect against pregnancy and STIs/STDs?",
+      question: "Hey there! What is your main reason for wanting to take birth control?",
       answers: [
         {
-          text: "Yes",
+          text: "Prevent STDs/STIs and prevent pregnancy",
           next: {
-            result: "Use Condoms! Regular or Internal Condoms."
+            result: "Use Condoms!! Regular or Internal Condoms.",
+            note: "Note: Click each option for more information to see which one is right for you!"
           }
         },
         {
-          text: "No. Just Pregnancy",
+          text: "Preventing Pregnancy",
           next: {
-            question: "Do you want a hormonal birth control or a non-hormonal birth control?",
+            question: "Would you rather have a birth control that utilizes hormone control or not?",
+            info: "Note: Hormonal birth control can have side effects but not all are negative! Many people report a lightening of cramps and period load. Some people's periods can go away all-together!",
             answers: [
               {
                 text: "Hormonal",
@@ -151,22 +302,39 @@
                     {
                       text: "Yes",
                       next: {
-                        question: "Ok queen go off!",
+                        encouragement: "We love an organized Queen! Check out these options!",
+                        note: "Note: Click each option for more information to see which one is right for you!",
                         answers: [
-                          { text: "The Pill (Everyday)", next: { result: "The Pill (Everyday)" } },
-                          { text: "Depo-Vera Shot (Every 3 months)", next: { result: "Depo-Vera Shot (Every 3 months)" } },
-                          { text: "Birth Control Rings (Put in and take out once a month)", next: { result: "Birth Control Rings (Put in and take out once a month)" } },
-                          { text: "Birth Control Patches (Weekly)", next: { result: "Birth Control Patches (Weekly)" } }
+                          { text: "The Pill (Everyday)", next: { result: "The Pill (Everyday)", info: methodInfo['The Pill (Everyday)'].desc } },
+                          { text: "Depo-Vera Shot (Every 3 months)", next: { result: "Depo-Vera Shot (Every 3 months)", info: methodInfo['Depo-Vera Shot (Every 3 months)'].desc } },
+                          { text: "Birth Control Rings (Put in and take out once a month)", next: { result: "Birth Control Rings (Put in and take out once a month)", info: methodInfo['Birth Control Rings (Put in and take out once a month)'].desc } },
+                          { text: "Birth Control Patches (Weekly)", next: { result: "Birth Control Patches (Weekly)", info: methodInfo['Birth Control Patches (Weekly)'].desc } }
                         ]
                       }
                     },
                     {
                       text: "No",
                       next: {
-                        question: "Are you ok with a small procedure done by a doctor or nurse?",
+                        encouragement: "No worries! There are still plenty of great options! Are you ok with a small procedure done by a doctor or nurse?",
                         answers: [
-                          { text: "Yes", next: { result: "Hormonal IUDs! (Can last up to 8 years!)" } },
-                          { text: "No", next: { result: "Birth Control Implant! (Lasts up to 5 years)" } }
+                          {
+                            text: "Yes",
+                            next: {
+                              encouragement: "Courageous! Love it! Check out these options!",
+                              note: "Note: Click each option for more information to see which one is right for you!",
+                              answers: [
+                                { text: "Hormonal IUDs! (Can last up to 8 years)", next: { result: "Hormonal IUDs! (Can last up to 8 years)", info: methodInfo['Hormonal IUDs! (Can last up to 8 years)'].desc } },
+                                { text: "Birth Control Implant! (Lasts up to 5 years)", next: { result: "Birth Control Implant! (Lasts up to 5 years)", info: methodInfo['Birth Control Implant! (Lasts up to 5 years)'].desc } }
+                              ]
+                            }
+                          },
+                          {
+                            text: "No",
+                            next: {
+                              result: "Use Condoms!! Regular or Internal Condoms.",
+                              note: "Note: Click each option for more information to see which one is right for you!"
+                            }
+                          }
                         ]
                       }
                     }
@@ -178,8 +346,22 @@
                 next: {
                   question: "Are you ok with a small procedure done by a doctor or nurse?",
                   answers: [
-                    { text: "Yes", next: { result: "Paragard Copper IUD (Can last up to 12 years)" } },
-                    { text: "No", next: { result: "Use Condoms!! Regular or Internal Condoms." } }
+                    {
+                      text: "Yes",
+                      next: {
+                        encouragement: "Courageous! Love it! Check out the Paragard Copper IUD",
+                        answers: [
+                          { text: "Paragard Copper IUD", next: { result: "Paragard Copper IUD", info: methodInfo['Paragard Copper IUD'].desc, note: "Note: Click each option for more information to see which one is right for you!" } }
+                        ]
+                      }
+                    },
+                    {
+                      text: "No",
+                      next: {
+                        result: "Use Condoms!! Regular or Internal Condoms.",
+                        note: "Note: Click each option for more information to see which one is right for you!"
+                      }
+                    }
                   ]
                 }
               }
@@ -189,49 +371,120 @@
       ]
     };
 
-    // Optional: Info bubble for hormonal birth control
-    const hormonalInfo = `Hormonal birth control can have side effects but not all are negative! Many people report a lightening of cramps and period load. Some people's periods can go away all-together!`;
+    // Modal logic
+    function showModal(title, desc) {
+      const modalRoot = document.getElementById('modal-root');
+      modalRoot.innerHTML = `
+        <div class="modal-overlay" tabindex="-1">
+          <div class="modal" role="dialog" aria-modal="true">
+            <button class="close-modal" aria-label="Close" onclick="document.getElementById('modal-root').innerHTML = ''">&times;</button>
+            <h2>${title}</h2>
+            <p>${desc}</p>
+          </div>
+        </div>
+      `;
+      // Trap focus
+      const closeBtn = modalRoot.querySelector('.close-modal');
+      closeBtn.focus();
+      modalRoot.querySelector('.modal-overlay').onclick = (e) => {
+        if (e.target === e.currentTarget) modalRoot.innerHTML = '';
+      };
+    }
 
     const app = document.getElementById('app');
 
-    function renderNode(node, showHormonalInfo = false) {
+    function renderNode(node) {
       app.innerHTML = '';
+      if (node.info) {
+        const info = document.createElement('div');
+        info.className = 'info-bubble';
+        info.textContent = node.info;
+        app.appendChild(info);
+      }
+      if (node.encouragement) {
+        const enc = document.createElement('div');
+        enc.className = 'encouragement';
+        enc.textContent = node.encouragement;
+        app.appendChild(enc);
+      }
+      if (node.note) {
+        const note = document.createElement('div');
+        note.className = 'note-bubble';
+        note.textContent = node.note;
+        app.appendChild(note);
+      }
       if (node.question) {
         const q = document.createElement('div');
         q.className = 'question';
         q.textContent = node.question;
         app.appendChild(q);
-        if (showHormonalInfo) {
-          const info = document.createElement('div');
-          info.className = 'info-bubble';
-          info.textContent = hormonalInfo;
-          app.appendChild(info);
-        }
         const answersDiv = document.createElement('div');
         answersDiv.className = 'answers';
-        node.answers.forEach((ans, idx) => {
-          const btn = document.createElement('button');
+        node.answers.forEach((ans) => {
+          const btn = document.createElement('div');
+          btn.className = 'option-card';
+          btn.tabIndex = 0;
+          btn.setAttribute('role', 'button');
+          btn.setAttribute('aria-pressed', 'false');
+          btn.textContent = ans.text;
+          btn.onclick = () => renderNode(ans.next);
+          btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') btn.onclick(); };
+          answersDiv.appendChild(btn);
+        });
+        app.appendChild(answersDiv);
+      } else if (node.answers) {
+        // For encouragement/note + options
+        const answersDiv = document.createElement('div');
+        answersDiv.className = 'answers';
+        node.answers.forEach((ans) => {
+          const btn = document.createElement('div');
+          btn.className = 'option-card';
+          btn.tabIndex = 0;
+          btn.setAttribute('role', 'button');
+          btn.setAttribute('aria-pressed', 'false');
           btn.textContent = ans.text;
           btn.onclick = () => {
-            // Show info bubble only for hormonal/non-hormonal question
-            if (node.question.includes('hormonal birth control')) {
-              renderNode(ans.next, true);
-            } else {
-              renderNode(ans.next);
+            // If this is a final method, show modal
+            if (ans.next && ans.next.result && methodInfo[ans.next.result]) {
+              showModal(methodInfo[ans.next.result].title, methodInfo[ans.next.result].desc);
             }
+            renderNode(ans.next);
           };
+          btn.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') btn.onclick(); };
           answersDiv.appendChild(btn);
         });
         app.appendChild(answersDiv);
       } else if (node.result) {
+        // Final result
         const res = document.createElement('div');
-        res.className = 'result';
+        res.className = 'option-card';
+        res.style.background = '#fff3e0';
+        res.style.color = '#b71c5a';
+        res.style.fontWeight = '700';
+        res.style.fontSize = '1.3rem';
+        res.style.margin = '1.5rem auto';
+        res.style.cursor = 'pointer';
+        res.tabIndex = 0;
+        res.setAttribute('role', 'button');
+        res.setAttribute('aria-pressed', 'false');
         res.textContent = node.result;
+        res.onclick = () => {
+          if (methodInfo[node.result]) {
+            showModal(methodInfo[node.result].title, methodInfo[node.result].desc);
+          }
+        };
+        res.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') res.onclick(); };
         app.appendChild(res);
+        if (node.note) {
+          const note = document.createElement('div');
+          note.className = 'note-bubble';
+          note.textContent = node.note;
+          app.appendChild(note);
+        }
         const restartBtn = document.createElement('button');
+        restartBtn.className = 'restart-btn';
         restartBtn.textContent = 'Start Over';
         restartBtn.onclick = () => renderNode(tree);
-        restartBtn.style.marginTop = '2rem';
         app.appendChild(restartBtn);
       }
     }
