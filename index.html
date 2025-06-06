@@ -145,6 +145,33 @@
       margin-left: auto;
       margin-right: auto;
     }
+    .welcome {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 350px;
+      width: 100%;
+      animation: fadeIn 0.5s;
+    }
+    .start-btn {
+      background: var(--button-bg);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 1.2rem 3rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin: 2.5rem auto 0 auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+      transition: background 0.2s, transform 0.1s;
+      display: block;
+    }
+    .start-btn:hover, .start-btn:focus {
+      background: var(--button-hover);
+      transform: translateY(-2px) scale(1.03);
+    }
     .modal-overlay {
       position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
@@ -230,6 +257,10 @@
       }
       .modal {
         padding: 1.2rem 0.7rem 1rem 0.7rem;
+      }
+      .start-btn {
+        font-size: 1.1rem;
+        padding: 1rem 2rem;
       }
     }
   </style>
@@ -371,6 +402,12 @@
       ]
     };
 
+    // Welcome screen notes
+    const welcomeNotes = [
+      "Note: Hormonal birth control can have side effects but not all are negative! Many people report a lightening of cramps and period load. Some people's periods can go away all-together!",
+      "Note: Click each option for more information to see which one is right for you!"
+    ];
+
     // Modal logic
     function showModal(title, desc) {
       const modalRoot = document.getElementById('modal-root');
@@ -392,6 +429,24 @@
     }
 
     const app = document.getElementById('app');
+
+    function renderWelcome() {
+      app.innerHTML = '';
+      const welcomeDiv = document.createElement('div');
+      welcomeDiv.className = 'welcome';
+      welcomeNotes.forEach(note => {
+        const noteDiv = document.createElement('div');
+        noteDiv.className = 'note-bubble';
+        noteDiv.textContent = note;
+        welcomeDiv.appendChild(noteDiv);
+      });
+      const startBtn = document.createElement('button');
+      startBtn.className = 'start-btn';
+      startBtn.textContent = 'Start';
+      startBtn.onclick = () => renderNode(tree);
+      welcomeDiv.appendChild(startBtn);
+      app.appendChild(welcomeDiv);
+    }
 
     function renderNode(node) {
       app.innerHTML = '';
@@ -484,13 +539,13 @@
         const restartBtn = document.createElement('button');
         restartBtn.className = 'restart-btn';
         restartBtn.textContent = 'Start Over';
-        restartBtn.onclick = () => renderNode(tree);
+        restartBtn.onclick = () => renderWelcome();
         app.appendChild(restartBtn);
       }
     }
 
-    // Start the flow
-    renderNode(tree);
+    // Start with welcome screen
+    renderWelcome();
   </script>
 </body>
 </html> 
