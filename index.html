@@ -465,7 +465,8 @@
         enc.textContent = node.encouragement;
         app.appendChild(enc);
       }
-      if (node.note) {
+      // Only render note here if not a result node
+      if (node.note && !node.result) {
         const note = document.createElement('div');
         note.className = 'note-bubble';
         note.textContent = node.note;
