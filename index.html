@@ -310,13 +310,13 @@
 
     // Decision tree structure
     const tree = {
-      question: "Hey there! What is your main reason for wanting to take birth control?",
+      question: "Hey there! What is your main priority when it comes to birthcontrol?",
       answers: [
         {
-          text: "Prevent STDs/STIs and prevent pregnancy",
+          text: "Prevent STDs/STIs",
           next: {
             result: "Use Condoms!! Regular or Internal Condoms.",
-            note: "Note: Click each option for more information to see which one is right for you!"
+            note: "Note: Click the option for more information!"
           }
         },
         {
@@ -363,7 +363,7 @@
                             text: "No",
                             next: {
                               result: "Use Condoms!! Regular or Internal Condoms.",
-                              note: "Note: Click each option for more information to see which one is right for you!"
+                              note: "Note: Click on the option for more information!"
                             }
                           }
                         ]
@@ -404,8 +404,8 @@
 
     // Welcome screen notes
     const welcomeNotes = [
-      "Note: Hormonal birth control can have side effects but not all are negative! Many people report a lightening of cramps and period load. Some people's periods can go away all-together!",
-      "Note: Click each option for more information to see which one is right for you!"
+      "Thank you for using the Mochi Health Birth Control Finder! We hope this helps you find the best birth control for you!",
+      "This is just a tool to help you find the best birth control for you. It is not a substitute for medical advice. Please talk to your doctor to find the best birth control for you."
     ];
 
     // Modal logic
@@ -443,7 +443,10 @@
       const startBtn = document.createElement('button');
       startBtn.className = 'start-btn';
       startBtn.textContent = 'Start';
-      startBtn.onclick = () => renderNode(tree);
+      startBtn.onclick = () => {
+        app.innerHTML = '';
+        renderNode(tree);
+      };
       welcomeDiv.appendChild(startBtn);
       app.appendChild(welcomeDiv);
     }
