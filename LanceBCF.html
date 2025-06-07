@@ -310,7 +310,7 @@
 
     // Decision tree structure
     const tree = {
-      question: "Hey there! What is your main prioriy when it comes to birthcontrol?",
+      question: "Hey there! What is your main priority when it comes to birthcontrol?",
       answers: [
         {
           text: "Prevent STDs/STIs",
@@ -443,7 +443,10 @@
       const startBtn = document.createElement('button');
       startBtn.className = 'start-btn';
       startBtn.textContent = 'Start';
-      startBtn.onclick = () => renderNode(tree);
+      startBtn.onclick = () => {
+        app.innerHTML = '';
+        renderNode(tree);
+      };
       welcomeDiv.appendChild(startBtn);
       app.appendChild(welcomeDiv);
     }
@@ -462,7 +465,8 @@
         enc.textContent = node.encouragement;
         app.appendChild(enc);
       }
-      if (node.note) {
+      // Only render note here if not a result node
+      if (node.note && !node.result) {
         const note = document.createElement('div');
         note.className = 'note-bubble';
         note.textContent = node.note;
